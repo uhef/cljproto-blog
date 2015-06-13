@@ -59,6 +59,8 @@ and executing the following in the REPL:
 
 This will start the server in port 8080. Directing your browser to [http://localhost:8080/][localhost] should print *Hello World*.
 
+REPL integration to Vim through [fireplace.vim][fireplace] should now work. To give it a try open `handler.clj` in Vim and edit the the string `"Hello World"` to `"Hello REPL"`. Evaluate both functions `approutes` and `app`. You can do this for instance by `cq%` and enter at either opening or closing parantheses of the functions. For more instructions on how to use fireplace see their github page. Now refresh the browser and it should say *Hello REPL* instead of *Hello World*. No need to restart the server or save the file. Nice. 
+
 [fireplace]: https://github.com/tpope/vim-fireplace
 [localhost]: http://localhost:8080/
 
