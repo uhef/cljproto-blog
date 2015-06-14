@@ -12,9 +12,16 @@ What follows is not that straight forward though. We are going to get Vim REPL i
 
 Create test project
 -------------------
-Create an empty Clojure Compojure project for this exercise. After doing this once it should be easy to integrate REPL integration to an existing project:
+Create an empty Clojure Compojure project for this exercise. After doing this once it should be easy to integrate REPL integration to an existing project as well:
 
 `lein new compojure clj-cljs-vim-repl`
+
+Upgrade the used Clojure and Compojure version immediatelly to something newer. We are going to need these versions when we start to work on ClojureScript. Modify the dependencies in `project.clj` to look like this:
+{% highlight clojure %}
+:dependencies [[org.clojure/clojure "1.7.0-RC1"]
+               [compojure "1.3.4"]
+               [ring/ring-defaults "0.1.2"]]
+{% endhighlight %}
 
 Enable Vim + REPL integration on Clojure code
 ---------------------------------------------
@@ -41,8 +48,8 @@ The above relies on some Jetty dependencies. Add them to the `:require` - clause
 And to `project.clj`:
 
 {% highlight clojure %}
-:dependencies [[org.clojure/clojure "1.6.0"]
-               [compojure "1.3.1"]
+:dependencies [[org.clojure/clojure "1.7.0-RC1"]
+               [compojure "1.3.4"]
                [ring/ring-defaults "0.1.2"]
                [ring/ring-jetty-adapter "1.3.2"]
                [ring/ring-devel "1.3.2"]]
@@ -59,8 +66,61 @@ and executing the following in the REPL:
 
 This will start the server in port 8080. Directing your browser to [http://localhost:8080/][localhost] should print *Hello World*.
 
-REPL integration to Vim through [fireplace.vim][fireplace] should now work. To give it a try open `handler.clj` in Vim and edit the the string `"Hello World"` to `"Hello REPL"`. Evaluate both functions `approutes` and `app`. You can do this for instance by `cq%` and enter at either opening or closing parantheses of the functions. For more instructions on how to use fireplace see their github page. Now refresh the browser and it should say *Hello REPL* instead of *Hello World*. No need to restart the server or save the file. Nice. 
+REPL integration to Vim through [fireplace.vim][fireplace] should now work. To give it a try open `handler.clj` in Vim and edit the the string `"Hello World"` to `"Hello REPL"`. Evaluate both functions `approutes` and `app`. You can do this for instance by `cq%` and enter at either opening or closing parantheses of the functions. For more instructions on how to use fireplace see their [github page][fireplace]. Now refresh the browser and it should say *Hello REPL* instead of *Hello World*. No need to restart the server or save the file. Nice. 
+
+Enable Vim + REPL integration on ClojureScript
+----------------------------------------------
+Getting the REPL integration to work on your ClojureScript code is slightly more involved. First we need to create some ClojureScript code that we can later modify and evaluate.
+
+Create a new ClojureScript file `core.cljs` in `src/cljs/clj-cljs-vim-repl` and add only following to the file:
+
+{% highlight clojure %}
+(ns clj-cljs-vim-repl.core
+  (:require [weasel.repl :as weasel]))
+
+(weasel/connect "ws://localhost:9001" :verbose true)
+{% endhighlight %}
+
+When ran in browser this peace of code will connect browser to ClojureScript REPL that we will have running shortly. Connection will be created using [weasel][weasel].
+
+In order to make the above ClojureScript code work we will have to compile it and contain [weasel][weasel] in our dependencies. Modify the `project.clj` so that the dependencies look something like this:
+
+{% highlight clojure %}
+:dependencies [[org.clojure/clojure "1.7.0-RC1"]
+               [compojure "1.3.4"]
+               [ring/ring-defaults "0.1.2"]
+               [ring/ring-jetty-adapter "1.3.2"]
+               [ring/ring-devel "1.3.2"]
+               [org.clojure/clojurescript "0.0-3291"]
+               [weasel "0.7.0"]]
+{% endhighlight %}
+
+Add ClojureScript compilation step to application startup by modifying the boot function in `handler.clj` to look like this:
+
+{% highlight clojure %}
+(defn boot []
+  ; Build ClojureScript when launching application
+  (cljs.build.api/build "src/cljs" {:output-to "resources/public/out/main.js"
+                                    :output-dir "resources/public/out"})
+  (run-jetty (wrap-reload #'app '(clj-cljs-vim-repl.handler)) {:port 8080}))
+{% endhighlight %}
+
+And add the required ClojureScript compiler dependency to `handler.clj`:
+{% highlight clojure %}
+(ns clj-cljs-vim-repl.handler
+  (:require [compojure.core :refer :all]
+            [compojure.route :as route]
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.reload :refer [wrap-reload]]
+            ; Required for ClojureScript compilation
+            [cljs.build.api :refer [build]]))
+{% endhighlight %}
+
+*DISCLAIMER:* You might want to use [lein-cljsbuild][lein-cljsbuild] and/or [lein-figwheel][lein-figwheel] for ClojureScript compilation but to keep it simple we will go with the approach above.
 
 [fireplace]: https://github.com/tpope/vim-fireplace
 [localhost]: http://localhost:8080/
-
+[weasel]:    https://github.com/tomjakubowski/weasel
+[lein-cljsbuild]: https://github.com/emezeske/lein-cljsbuild
+[lein-figwheel]: https://github.com/bhauman/lein-figwheel
