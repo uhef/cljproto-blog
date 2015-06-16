@@ -100,7 +100,9 @@ Add ClojureScript compilation step to application startup by modifying the boot 
 {% highlight clojure %}
 (defn boot []
   ; Build ClojureScript when launching application
-  (cljs.build.api/build "src/cljs" {:output-to "resources/public/out/main.js"
+  (cljs.build.api/build "src/cljs" {:main 'clj-cljs-vim-repl.core
+                                    :asset-path "out"
+                                    :output-to "resources/public/out/main.js"
                                     :output-dir "resources/public/out"})
   (run-jetty (wrap-reload #'app '(clj-cljs-vim-repl.handler)) {:port 8080}))
 {% endhighlight %}
@@ -118,6 +120,15 @@ And add the required ClojureScript compiler dependency to `handler.clj`:
 {% endhighlight %}
 
 *DISCLAIMER:* You might want to use [lein-cljsbuild][lein-cljsbuild] and/or [lein-figwheel][lein-figwheel] for ClojureScript compilation but to keep it simple we will go with the approach above.
+
+Create `index.html` in `resources/public` folder to load the compiled ClojureScript code:
+{% highlight html %}
+<html>
+    <body>
+        <script type="text/javascript" src="out/main.js"></script>
+    </body>
+</html>
+{% endhighlight %}
 
 [fireplace]: https://github.com/tpope/vim-fireplace
 [localhost]: http://localhost:8080/
