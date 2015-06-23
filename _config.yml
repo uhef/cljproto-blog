@@ -2,9 +2,9 @@
 title: The Clojure(Script) Proto
 email: tuomas.jarvensivu@iki.fi
 description: > # this means to ignore newlines until "baseurl:"
-  Blog posts on making a Clojure + ClojureScript service.
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+  Blog posts on making of a Clojure + ClojureScript service.
+baseurl: "/cljproto-blog/" # the subpath of your site, e.g. /blog/
+url: "http://uhef.github.io" # the base hostname & protocol for your site
 twitter_username: uhef
 github_username:  uhef
 google_analytics: UA-64430223-1
