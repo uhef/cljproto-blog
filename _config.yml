@@ -8,5 +8,6 @@ url: "http://yourdomain.com" # the base hostname & protocol for your site
 twitter_username: uhef
 github_username:  uhef
 google_analytics: UA-64430223-1
+disqus: theclojurescriptproto
 # Build settings
 markdown: kramdown
