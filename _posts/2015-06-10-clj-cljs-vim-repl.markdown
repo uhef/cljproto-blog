@@ -6,6 +6,8 @@ categories:
 ---
 Although there are multiple blog posts about getting Clojure / ClojureScript toolchain to work on Vim I decided that there is room for one more. Motivation for this post is to make it easy for anybody to set up toolchain for Clojure + ClojureScript project where Vim REPL integration works seamlessly for both Clojure and ClojureScript code. In this setup Clojure REPL runs in host Clojure runtime and ClojureScript REPL executes code on browser.
 
+The sample project that is built here can also be found from [github][vimcljsrepl].
+
 First thing to do is to make sure you [fireplace.vim][fireplace] installed in your Vim bundles. For the setup described here I am using fireplace version from commit hash `89aee9c...` (for lack of better versioning) and Vim 7.4.52. Just follow installation instructions at fireplace github repo. This should be straight forward.
 
 What follows is not that straight forward though. We are going to get Vim REPL integration work on ClojureScript so that the ClojureScript code is executed in the browser. On the side we will also get REPL integration from Vim to Clojure.
@@ -210,3 +212,4 @@ Your REPL integration to both Clojure and ClojureScript are now working.
 [piggieback]: https://github.com/cemerick/piggieback
 [lein-cljsbuild]: https://github.com/emezeske/lein-cljsbuild
 [lein-figwheel]: https://github.com/bhauman/lein-figwheel
+[vimcljsrepl]: https://github.com/uhef/vimcljsrepl
