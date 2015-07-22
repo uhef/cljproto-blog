@@ -4,11 +4,14 @@ title:  "Clojure + ClojureScript + Vim + REPL"
 date:   2015-06-10 20:50:19
 categories: 
 ---
+
+_UPDATE Jul 22, 2015: Latest version of [fireplace.vim][fireplace] (commit hash `9f7b184...`) supports evaluation of forms using `cpp` also on ClojureScript which is more convenient to the usage of `cq%` - sequence. Post is now updated accordingly._
+
 Although there are multiple blog posts about getting Clojure / ClojureScript toolchain to work on Vim I decided that there is room for one more. Motivation for this post is to make it easy for anybody to set up toolchain for Clojure + ClojureScript project where Vim REPL integration works seamlessly for both Clojure and ClojureScript code. In this setup Clojure REPL runs in host Clojure runtime and ClojureScript REPL executes code on browser.
 
 The sample project that is built here can also be found from [github][vimcljsrepl].
 
-First thing to do is to make sure you [fireplace.vim][fireplace] installed in your Vim bundles. For the setup described here I am using fireplace version from commit hash `89aee9c...` (for lack of better versioning) and Vim 7.4.52. Just follow installation instructions at fireplace github repo. This should be straight forward.
+First thing to do is to make sure you [fireplace.vim][fireplace] installed in your Vim bundles. For the setup described here I am using fireplace version from commit hash `9f7b184...` (for lack of better versioning) and Vim 7.4.52. Just follow installation instructions at fireplace github repo. This should be straight forward.
 
 What follows is not that straight forward though. We are going to get Vim REPL integration work on ClojureScript so that the ClojureScript code is executed in the browser. On the side we will also get REPL integration from Vim to Clojure.
 
@@ -79,7 +82,7 @@ and executing the following in the REPL:
 
 This will start the server in port 8080. Directing your browser to [http://localhost:8080/][localhost] should show friendly  *Hello World*.
 
-REPL integration to Vim through [fireplace.vim][fireplace] should now work. To give it a try open `handler.clj` in Vim and edit the the string `"Hello World"` to `"Hello REPL"`. Evaluate both functions `approutes` and `app`. You can do this for instance by `cq%` and enter at either opening or closing parantheses of the functions. For more instructions on how to use fireplace see their [github page][fireplace]. Now refresh the browser and it should say *Hello REPL* instead of *Hello World*. No need to restart the server or save the file. Nice. 
+REPL integration to Vim through [fireplace.vim][fireplace] should now work. To give it a try open `handler.clj` in Vim and edit the the string `"Hello World"` to `"Hello REPL"`. Evaluate both functions `approutes` and `app`. You can do this for instance by key sequence `cpp` (evaluate innermost form under the cursor) on the name of the functions. For more instructions on how to use fireplace see their [github page][fireplace]. Now refresh the browser and it should say *Hello REPL* instead of *Hello World*. No need to restart the server or save the file. Nice. 
 
 Enable Vim + REPL integration on ClojureScript
 ----------------------------------------------
@@ -201,7 +204,7 @@ To try it out run the REPL with `lein repl`, start the server by running `(run)`
 (js/alert "Hello Browser!")
 {% endhighlight %}
 
-Evaluate the alert for instance by entering `cq%` and enter at either opening or closing parantheses and observe the alert box on the browser.
+Evaluate the alert for instance with key sequence `cpp` while cursor is within the form and observe the alert box on the browser.
 
 Your REPL integration to both Clojure and ClojureScript are now working.
 
